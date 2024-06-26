@@ -14,7 +14,7 @@
                 <el-button type="primary" @click="search">查询</el-button>
             </el-form-item>
         </el-form>
-	</div>
+    </div>
 </template>
 
 <script>
@@ -25,23 +25,22 @@ export default {
         return {
             name: '',
             state: '',
-            cards: []
         };
     },
     methods: {
         async search() {
             try {
-                const res = await this.$http.get("/tenant/search", {
+                const res = await axios.get("http://localhost:5000/admin_searchCard", {
                     params: {
-                        name: this.name,
-                        state: this.state
+                        user_name: this.name,
+                        card_status: this.state
                     }
                 });
-                if (res.data.code === 0) {
+                if (res.data.status === 1) {
                     this.$emit('search-results', res.data.data);
                     this.$message.success('搜索成功');
                 } else {
-                    this.$message.error('搜索失败');
+                    this.$message.error('没有找到符合条件的模型');
                 }
             } catch (error) {
                 this.$message.error('搜索错误');

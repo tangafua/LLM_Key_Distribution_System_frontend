@@ -4,13 +4,13 @@
     <div class="mainContainer">
       <admin_navigation />
       <div class="content">
-        <modelSearch />
+        <modelSearch @search-results="handleSearchResults" />
         <div class="function_bar">
           <addModel />
-          <editModel />
-          <delModel />
+          <editModel :model="selectedModel" />
+          <delModel :model="selectedModel"/>
         </div>
-        <admin_modelList :models="models" />
+        <admin_modelList :models="models" @selected_model="setSelectedModel"/>
       </div>
     </div>
   </div>
@@ -38,13 +38,14 @@ export default {
   },
   data() {
     return {
-      models: []
+      models: [],
+      selectedModel: null
     };
   },
   methods: {
     async getAllModels() {
       try {
-        const response = await axios.get('http://127.0.0.1:4523/m1/4663854-4314933-default/allModels');
+        const response = await axios.get('http://localhost:5000/allModels');
         if (response.data.status === 1) {
           this.models = response.data.data;
         } else {
@@ -54,6 +55,12 @@ export default {
         console.error("无法读取", error);
         this.$message.error("无法读取");
       }
+    },
+    setSelectedModel(model) {
+      this.selectedModel = model;
+    },
+    handleSearchResults(results) {
+      this.models = results;
     }
   },
   mounted() {

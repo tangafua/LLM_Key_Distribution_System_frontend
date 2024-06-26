@@ -38,12 +38,17 @@ export default {
   methods: {
     ...mapActions(['login']),
     OnLogin() {
-      axios.post('http://127.0.0.1:4523/m1/4663854-4314933-default/admin_login', {
-        username: this.loginForm.username,
-        password: this.loginForm.password
+      axios.post('http://localhost:5000/admin_login', {
+        admin_name: this.loginForm.username,
+        admin_password: this.loginForm.password
       })
       .then((res) => {
         if(res.data.status === 1){
+          const access_token = res.data.data.access_token;
+          const admin_name = res.data.data.admin_name;
+          console.log(admin_name);
+          localStorage.setItem('token', access_token);
+          localStorage.setItem('user_name', admin_name); 
           this.$message.success("登录成功");
           this.login({
             type: '管理员',

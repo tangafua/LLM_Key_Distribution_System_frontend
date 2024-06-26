@@ -4,7 +4,7 @@
         <div class="mainContainer">
             <admin_navigation />
             <div class="content">
-                <admin_recordSearch />
+                <admin_recordSearch @search-results="handleSearchResults" />
                 <el-table :data="records">
                     <el-table-column prop="record_id" label="记录编号"></el-table-column>
                     <el-table-column prop="user_id" label="用户编号"></el-table-column>
@@ -13,8 +13,8 @@
                     <el-table-column prop="model_name" label="模型名称"></el-table-column>
                     <el-table-column prop="card_id" label="卡段编号"></el-table-column>
                     <el-table-column prop="card_name" label="卡段名称"></el-table-column>
-                    <el-table-column prop="token_num" label="花费token数"></el-table-column>
-                    <el-table-column prop="taken_price" label="花费金额"></el-table-column>
+                    <el-table-column prop="token_cost" label="花费token数"></el-table-column>
+                    <el-table-column prop="price_cost" label="花费金额"></el-table-column>
                 </el-table>
             </div>
         </div>
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Header from '../../components/header.vue';
 import admin_navigation from '@/components/admin_navigation.vue';
 import admin_recordSearch from '@/components/admin_recordSearch.vue';
@@ -34,17 +35,31 @@ export default {
     },
     data() {
         return {
-            records: [{
-                record_id: '1',
-                user_id: '1',
-                user_name: 'test1',
-                model_id: '1',
-                model_name: 'test_model1',
-                card_id: '1',
-                card_name: 'test_card1',
-                token_num: '1000',
-                taken_price: '30'
-            }]
+            records: [
+
+            ]
+        }
+    },
+    mounted() {
+        this.getAllRecords();
+    },
+    methods: {
+        async getAllRecords() {
+            try {
+                const response = await axios.get('http://localhost:5000/admin_allRecords');
+                console.log(response);
+                if (response.data.status === 1) {
+                    this.records = response.data.data;
+                } else {
+                    this.$message.error("读取失败");
+                }
+            } catch (error) {
+                console.error("无法读取", error);
+                this.$message.error("无法读取");
+            }
+        },
+        handleSearchResults(results) {
+            this.records = results;
         }
     }
 }

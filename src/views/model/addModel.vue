@@ -6,21 +6,21 @@
         <el-dialog v-model="addDialogVisible" title="增加模型">
 			<el-form :model="newModel">
 				<el-row :gutter="20">
-					<el-col :span="12">
+					<!-- <el-col :span="12">
 						<el-form-item label="模型编号">
 							<el-input v-model="newModel.id" style="width: 100%;"></el-input>
 						</el-form-item>
-					</el-col>
+					</el-col> -->
 					<el-col :span="12">
 						<el-form-item label="模型名称">
-							<el-input v-model="newModel.name" style="width: 100%;"></el-input>
+							<el-input v-model="newModel.model_name" style="width: 100%;"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row :gutter="20">
 					<el-col :span="12">
 						<el-form-item label="模型状态">
-							<el-select v-model="newModel.state" placeholder="请选择状态">
+							<el-select v-model="newModel.model_status" placeholder="请选择状态">
 								<el-option label="启用" value="1"></el-option>
 								<el-option label="禁用" value="0"></el-option>
 							</el-select>
@@ -28,12 +28,12 @@
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="模型价格">
-							<el-input v-model="newModel.price" style="width: 100%;"></el-input>
+							<el-input v-model="newModel.model_price" style="width: 100%;"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-form-item label="模型描述">
-					<el-input v-model="newModel.description" style="width: 100%;"></el-input>
+					<el-input v-model="newModel.model_description" style="width: 100%;"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -45,16 +45,17 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
     data() {
 		return {
 			addDialogVisible: false,
 			newModel: {
-				id: '',
-				name: '',
-				state: null,
-				price: '',
-				description: ''
+				model_id: '',
+				model_name: '',
+				model_status: '',
+				model_price: '',
+				model_description: ''
 			}
     	};
   	},
@@ -64,21 +65,23 @@ export default {
 		},
 		clear() {
 			this.newModel = {
-				id: '',
-				name: '',
-				state: null,
-				price: '',
-				description: ''
+				model_id: '',
+				model_name: '',
+				model_status: null,
+				model_price: '',
+				model_description: ''
 			};
 		},
-		async addModel() {
+		addModel() {
 			const modelData = JSON.parse(JSON.stringify(this.newModel));
-			this.$test.post("/model/add", modelData, {
+			axios.post('http://localhost:5000/admin_addModel', modelData, { withCredentials: true }, {
 				headers: {
-				'Content-Type': 'application/json'
-			}})
+					'Content-Type': 'application/json'
+				}
+			})
 			.then((res) => {
-				if (res.data.code === 0) {
+				console.log(res);
+				if (res.data.status === 1) {
 					this.$message({
 						type: 'success',
 						message: '添加成功'

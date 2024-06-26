@@ -31,14 +31,16 @@ export default {
     methods: {
         async search() {
             try {
-                const res = await this.$http.get("/tenant/search", {
+                const res = await axios.get('http://localhost:5000/searchModel', {
                     params: {
-                        name: this.name,
-                        state: this.state
+                        model_name: this.name,
+                        model_status: this.state
                     }
                 });
-                if (res.data.code === 0) {
+                if (res.data.status === 1) {
                     this.$emit('search-results', res.data.data);
+                    this.models = res.data.data;
+                    console.log(this.models);
                     this.$message.success('搜索成功');
                 } else {
                     this.$message.error('搜索失败');

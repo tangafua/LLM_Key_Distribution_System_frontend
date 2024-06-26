@@ -5,7 +5,7 @@
       <user_navigation />
       <div class="content">
         <div class="function_bar">
-          <modelSearch />
+          <modelSearch @search-results="handleSearchResults" />
         </div>
         <user_modelList :models="models" />
       </div>
@@ -35,7 +35,7 @@ export default {
   methods: {
     async getAllModels() {
       try {
-        const response = await axios.get('http://127.0.0.1:4523/m1/4663854-4314933-default/allModels');
+        const response = await axios.get('http://localhost:5000/allModels');
         if (response.data.status === 1) {
           this.models = response.data.data;
         } else {
@@ -45,6 +45,9 @@ export default {
         console.error("无法读取", error);
         this.$message.error("无法读取");
       }
+    },
+    handleSearchResults(results) {
+      this.models = results;
     }
   },
   mounted() {

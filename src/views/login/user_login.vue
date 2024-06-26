@@ -54,12 +54,17 @@ export default {
     methods: {
         ...mapActions(['login']),
         onLogin() {
-            axios.post('http://127.0.0.1:4523/m1/4663854-4314933-default/user_login', {
-                username: this.form.username,
-                password: this.form.password
+            axios.post('http://localhost:5000/user_login', {
+                user_name: this.form.username,
+                user_password: this.form.password
             })
             .then((res) => {
                 if(res.data.status === 1){
+                    const access_token = res.data.data.access_token;
+                    const user_name = res.data.data.user_name;
+                    console.log(user_name);
+                    localStorage.setItem('token', access_token);
+                    localStorage.setItem('user_name', user_name); 
                     this.$message.success("登录成功");
                     this.login({
                         type: '普通用户',
@@ -76,11 +81,11 @@ export default {
             })
         },
         onRegister() {
-            axios.post('http://127.0.0.1:4523/m1/4663854-4314933-default/user_register', {
-                username: this.form.username,
-                password: this.form.password,
-                phone: this.form.phone,
-                email: this.form.email
+            axios.post('http://localhost:5000/user_register', {
+                user_name: this.form.username,
+                user_password: this.form.password,
+                user_phone: this.form.phone,
+                user_email: this.form.email
             })
             .then((res) => {
                 if(res.data.status === 1){

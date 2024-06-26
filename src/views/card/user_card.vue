@@ -1,23 +1,23 @@
 <template>
   <div>
-    <Header />
-    <div class="mainContainer">
-      <user_navigation />
-      <div class="content">
-        <h1 class="headText">我的卡段</h1>
-        <div class="balanceField">
-          <span>账户余额： </span><span>{{ leftBalance }}</span>
-        </div>
-        <user_cardSearch />
-        <div class="function_bar">
-          <addUserCard />
-          <editUserCard />
-          <delUserCard />
-          <chat />
-        </div>
-        <userCardList/>
+      <Header />
+      <div class="mainContainer">
+          <user_navigation />
+          <div class="content">
+              <h1 class="headText">我的卡段</h1>
+              <div class="balanceField">
+                <span>账户余额： </span><span>{{ leftBalance }}</span>  
+              </div> 
+              <user_cardSearch @search-results="handleSearchResults" />
+              <div class="function_bar">
+                <addUserCard />
+                <editUserCard />
+                <delUserCard />
+                <chat />
+              </div>
+              <userCardList :userCards="userCards"/>
+          </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -45,25 +45,50 @@ export default {
   },
   data() {
     return {
-      leftBalance: 0
+      leftBalance: 0,
+      userCards: []
     };
+  },
+  mounted() {
+    this.fetchBalance();
+    this.getUserCards();
   },
   methods: {
     async fetchBalance() {
       try {
         const token = localStorage.getItem('token');
         const response = await axios.get('http://localhost:5000/money', {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true
+          headers: { Authorization: `Bearer ${token}` }
         });
-        this.leftBalance = response.data.data.balance;
+        if (response.data.status === 1) {
+          this.leftBalance = response.data.data.balance;
+        } else {
+          this.$message.error('获取余额失败');
+        }
       } catch (error) {
         console.error('获取余额失败:', error);
+        this.$message.error('获取余额失败');
       }
+    },
+    async getUserCards() {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:5000/user_allCards', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.data.status === 1) {
+          this.userCards = response.data.data;
+        } else {
+          this.$message.error('读取失败');
+        }
+      } catch (error) {
+        console.error('无法读取', error);
+        this.$message.error('无法读取');
+      }
+    },
+    handleSearchResults(cards) {
+      this.userCards = cards;
     }
-  },
-  created() {
-    this.fetchBalance();
   }
 };
 </script>

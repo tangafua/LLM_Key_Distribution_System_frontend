@@ -26,7 +26,7 @@
 		})
 		.then((res) => {
 		  console.log(res);
-		  if (res.data.code === 1) {
+		  if (res.data.status === 1) {
 			this.$message({
 			  type: 'success',
 			  message: '删除成功'

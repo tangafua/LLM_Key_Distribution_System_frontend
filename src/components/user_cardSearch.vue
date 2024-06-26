@@ -31,25 +31,24 @@ export default {
     methods: {
         async search() {
             try {
-                const res = await this.$http.get("/tenant/search", {
+                const token = localStorage.getItem('token');
+                const res = await axios.get('http://localhost:5000/user_searchCard', {
+                    headers: { Authorization: `Bearer ${token}` },
                     params: {
-                        name: this.name,
-                        state: this.state
+                        card_name: this.name,
+                        card_status: this.state
                     }
                 });
-                if (res.data.code === 0) {
+                if (res.data.status === 1) {
                     this.$emit('search-results', res.data.data);
                     this.$message.success('搜索成功');
                 } else {
-                    this.$message.error('搜索失败');
+                    this.$message.error('没有找到符合条件的使用记录');
                 }
             } catch (error) {
                 this.$message.error('搜索错误');
+                console.error('搜索错误:', error);
             }
-        },
-        reset() {
-            this.name = '';
-            this.state = '';
         }
     }
 }

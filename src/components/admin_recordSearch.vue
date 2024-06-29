@@ -2,10 +2,10 @@
     <div class="recordSearchBar">
         <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="用户名称">
-                <el-input v-model="user_name" placeholder="请输入模型名称"></el-input>
+                <el-input v-model="user_name" placeholder="请输入用户名称"></el-input>
             </el-form-item>
             <el-form-item label="模型名称">
-                <el-input v-model="model_name" placeholder="请输入用户名称"></el-input>
+                <el-input v-model="model_name" placeholder="请输入模型名称"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="search">查询</el-button>

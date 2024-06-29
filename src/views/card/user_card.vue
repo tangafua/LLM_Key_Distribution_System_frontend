@@ -1,23 +1,22 @@
 <template>
   <div>
-      <Header />
-      <div class="mainContainer">
-          <user_navigation />
-          <div class="content">
-              <h1 class="headText">我的卡段</h1>
-              <div class="balanceField">
-                <span>账户余额： </span><span>{{ leftBalance }}</span>  
-              </div> 
-              <user_cardSearch @search-results="handleSearchResults" />
-              <div class="function_bar">
-                <addUserCard />
-                <editUserCard />
-                <delUserCard />
-                <chat />
-              </div>
-              <userCardList :userCards="userCards"/>
-          </div>
+    <Header />
+    <div class="mainContainer">
+      <user_navigation />
+      <div class="content">
+        <h1 class="headText">我的卡段</h1>
+        <div class="balanceField">
+          <span>账户余额： </span><span>{{ leftBalance }}</span>  
+        </div> 
+        <user_cardSearch @search-results="handleSearchResults" />
+        <div class="function_bar">
+          <addUserCard />
+          <editUserCard :card="selectedCard" />
+          <delUserCard :card="selectedCard" @update-cards="getUserCards"/>
+        </div>
+        <userCardList :userCards="userCards" @selected_card="setSelectedCard"/>
       </div>
+    </div>
   </div>
 </template>
 
@@ -29,7 +28,6 @@ import addUserCard from './addUserCard.vue';
 import editUserCard from './editUserCard.vue';
 import delUserCard from './delUserCard.vue';
 import user_cardSearch from '@/components/user_cardSearch.vue';
-import chat from './chat.vue';
 import axios from 'axios';
 
 export default {
@@ -39,14 +37,14 @@ export default {
     addUserCard,
     editUserCard,
     delUserCard,
-    chat,
     userCardList,
     user_cardSearch
   },
   data() {
     return {
       leftBalance: 0,
-      userCards: []
+      userCards: [],
+      selectedCard: null
     };
   },
   mounted() {
@@ -88,6 +86,9 @@ export default {
     },
     handleSearchResults(cards) {
       this.userCards = cards;
+    },
+    setSelectedCard(card) {
+      this.selectedCard = card;
     }
   }
 };

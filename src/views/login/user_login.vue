@@ -62,9 +62,12 @@ export default {
                 if(res.data.status === 1){
                     const access_token = res.data.data.access_token;
                     const user_name = res.data.data.user_name;
+                    const user_id = res.data.data.user_id;
+                    console.log(user_id);
                     console.log(user_name);
                     localStorage.setItem('token', access_token);
                     localStorage.setItem('user_name', user_name); 
+                    localStorage.setItem('user_id', user_id);
                     this.$message.success("登录成功");
                     this.login({
                         type: '普通用户',
